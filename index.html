@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procerender | Processor-Side Rendering</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="panel">
+      <div class="panel-header">
+        <p class="eyebrow">Software 3D Rasterizer</p>
+        <h1>Procerender</h1>
+        <p class="lede">
+          Procerender stands for processor-side rendering. It rasterizes the Stanford Bunny on the CPU
+          and displays the generated frame, depth, and stencil images through plain HTML <code>&lt;img&gt;</code> elements.
+        </p>
+      </div>
+
+      <section class="card">
+        <h2>Render</h2>
+        <dl class="facts">
+          <div>
+            <dt>Frame</dt>
+            <dd id="renderStats">Waiting for first render...</dd>
+          </div>
+          <div>
+            <dt>Shading</dt>
+            <dd id="shadingMode">Waiting for first render...</dd>
+          </div>
+          <div>
+            <dt>Outputs</dt>
+            <dd id="outputStats">Waiting for first render...</dd>
+          </div>
+        </dl>
+        <label class="control">
+          <span>Image Resolution</span>
+          <select id="resolutionSelect">
+            <option value="160">160 x 160</option>
+            <option value="240">240 x 240</option>
+            <option value="320" selected>320 x 320</option>
+            <option value="480">480 x 480</option>
+            <option value="640">640 x 640</option>
+          </select>
+        </label>
+        <label class="toggle">
+          <input id="usePhongShading" type="checkbox" checked>
+          <span>Enable Phong shading. Leave it unchecked to render with Lambert diffuse shading.</span>
+        </label>
+        <p class="card-copy">
+          The light source stays locked to the orbit camera so the shading stays easy to interpret. The frame buffer
+          can switch between Lambert and Phong illumination, the depth buffer stores inverted camera-space
+          depth, and the stencil buffer stores binary mesh coverage after the depth test.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Scene</h2>
+        <dl class="facts">
+          <div>
+            <dt>Mesh</dt>
+            <dd id="meshStats">Loading mesh...</dd>
+          </div>
+          <div>
+            <dt>Orbit</dt>
+            <dd id="cameraAngles">Waiting for first render...</dd>
+          </div>
+          <div>
+            <dt>Lens</dt>
+            <dd id="cameraDistance">Waiting for first render...</dd>
+          </div>
+          <div>
+            <dt>Clipping</dt>
+            <dd id="clipPlanes">Waiting for first render...</dd>
+          </div>
+        </dl>
+      </section>
+    </aside>
+
+    <main class="stage-wrap">
+      <div class="stage-head">
+        <div>
+          <p class="stage-title">Framebuffer</p>
+          <p class="stage-subtitle">
+            No canvas. No WebGL. No browser drawing API calls. Each image below is a BMP blob generated
+            in JavaScript and assigned to an <code>&lt;img&gt;</code> element so the page can teach 3D
+            rendering principles with ordinary HTML.
+          </p>
+        </div>
+        <div class="stage-tools">
+          <p id="fpsMeter" class="fps-meter">FPS 0.0</p>
+          <div class="legend">
+            <span><i class="chip chip-frame"></i>shaded frame</span>
+            <span><i class="chip chip-depth"></i>inverted depth</span>
+            <span><i class="chip chip-stencil"></i>binary stencil</span>
+          </div>
+        </div>
+      </div>
+
+      <section class="viewport-layout">
+        <section id="stageViewport" class="frame-stage" aria-label="Orbit camera viewport">
+          <div class="stage-overlay">
+            <p>Drag to orbit</p>
+            <p>Wheel to zoom</p>
+          </div>
+          <img
+            id="frameImage"
+            class="buffer-image frame-image"
+            alt="Procerender framebuffer of the Stanford Bunny"
+            draggable="false"
+          >
+        </section>
+
+        <section class="buffer-stack" aria-label="Auxiliary render outputs">
+          <article class="buffer-card">
+            <div class="buffer-head">
+              <div>
+                <p class="stage-title">Depth</p>
+                <p class="buffer-copy">Inverted camera-space depth, brighter where the surface is closer to the viewer.</p>
+              </div>
+            </div>
+            <img
+              id="depthImage"
+              class="buffer-image"
+              alt="Procerender depth buffer of the Stanford Bunny"
+              draggable="false"
+            >
+          </article>
+
+          <article class="buffer-card">
+            <div class="buffer-head">
+              <div>
+                <p class="stage-title">Stencil</p>
+                <p class="buffer-copy">Binary mesh coverage: white means at least one raster sample survived the depth test.</p>
+              </div>
+            </div>
+            <img
+              id="stencilImage"
+              class="buffer-image"
+              alt="Procerender stencil buffer of the Stanford Bunny"
+              draggable="false"
+            >
+          </article>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="src/core/bootstrap.js" defer></script>
+  <script src="src/data/stanford-bunny.js" defer></script>
+  <script src="src/math/linear-algebra.js" defer></script>
+  <script src="src/mesh/mesh.js" defer></script>
+  <script src="src/camera/orbit-camera.js" defer></script>
+  <script src="src/render/framebuffer.js" defer></script>
+  <script src="src/render/bmp-encoder.js" defer></script>
+  <script src="src/render/software-rasterizer.js" defer></script>
+  <script src="src/ui/presenter.js" defer></script>
+  <script src="src/ui/interaction.js" defer></script>
+  <script src="src/app/main.js" defer></script>
+</body>
+</html>
