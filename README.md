@@ -91,13 +91,13 @@ The original geometry comes from the source STL asset bundled with the repositor
 For each triangle with vertices $\mathbf{v}_0$, $\mathbf{v}_1$, and $\mathbf{v}_2$, the face normal is computed as
 
 $$
-\mathbf{n}_f = \mathrm{normalize}\!\left((\mathbf{v}_1 - \mathbf{v}_0) \times (\mathbf{v}_2 - \mathbf{v}_0)\right).
+\mathbf{n}_f = \mathrm{normalize}\left((\mathbf{v}_1 - \mathbf{v}_0) \times (\mathbf{v}_2 - \mathbf{v}_0)\right).
 $$
 
 Each face normal contributes to its three incident vertices, and the averaged vertex normal becomes
 
 $$
-\mathbf{n}_i = \mathrm{normalize}\!\left(\frac{1}{m_i}\sum_{f \in \mathcal{N}(i)} \mathbf{n}_f\right),
+\mathbf{n}_i = \mathrm{normalize}\left(\frac{1}{m_i}\sum_{f \in \mathcal{N}(i)} \mathbf{n}_f\right),
 $$
 
 where $m_i$ is the number of incident faces of vertex $i$.
@@ -226,7 +226,7 @@ The shading switch is handled in `RasterizerApp.handleShadingChange()` in [src/a
 When the checkbox is unchecked, the app uses Lambert shading:
 
 $$
-I_{Lambert} = \mathrm{clamp}\!\left(k_a + k_d \max(0, \mathbf{n} \cdot \mathbf{l}), 0, 1\right).
+I_{Lambert} = \mathrm{clamp}\left(k_a + k_d \max(0, \mathbf{n} \cdot \mathbf{l}), 0, 1\right).
 $$
 
 Here:
@@ -244,7 +244,7 @@ $$
 
 $$
 I_{Phong} =
-\mathrm{clamp}\!\left(
+\mathrm{clamp}\left(
 k_a +
 k_d \max(0, \mathbf{n} \cdot \mathbf{l}) +
 k_s \max(0, \mathbf{r} \cdot \mathbf{v})^s,
